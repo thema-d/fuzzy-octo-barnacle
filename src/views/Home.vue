@@ -68,11 +68,10 @@ export default {
         minSpareCols: 1,
         minSpareRows: 1,
         allowEmpty: true,
-        columns: [
-          {
-            readOnly: true,
-            className: "htCenter",
-            renderer: function(instance, TD, row) {
+        cells: function(row, col) {
+          if (col == 0) {
+            this.readOnly = true;
+            this.renderer = function(instance, TD, row) {
               let data = instance.getDataAtRow(row);
               let parent = document.createElement("div");
               let div = document.createElement("div");
@@ -92,20 +91,18 @@ export default {
               TD.appendChild(parent);
 
               return TD;
-            }
-          },
-          {},
-          {},
-          { type: "checkbox" },
-          {
-            editor: "select",
-            selectOptions: ["In Progress", "Not Started", "Completed"],
-            width: 120
-          },
-          { type: "date", width: 120 }
-          // uncomment this if you want some more columns to fill the screen
-          // ...Array.from({ length: 20 }).map(() => {})
-        ],
+            };
+          } else if (col == 3) {
+            this.type = "checkbox";
+            this.className = "htCenter";
+          } else if (col == 4) {
+            this.editor = "select";
+            this.selectOptions = ["In Progress", "Not Started", "Completed"];
+            this.width = 120;
+          } else if (col == 5) {
+            this.type = "date";
+          }
+        },
         colHeaders: this.colHeaders,
         persistentState: true,
         afterChange: (changes, source) => {
