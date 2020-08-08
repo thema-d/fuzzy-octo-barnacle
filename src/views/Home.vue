@@ -61,13 +61,15 @@ export default {
       return {
         data: this.baseData,
         // minCols: 26,
-        // minRows: 26,
+        minRows: 23,
         width: "100vw",
         height: "100vh",
         contextMenu: true,
         className: "htLeft",
-        minSpareCols: 1,
-        minSpareRows: 1,
+        // minSpareCols: 1,
+        minSpareRows: 2,
+        manualRowMove: true,
+        manualColumnMove: true,
         allowEmpty: true,
         cells: function(row, col) {
           if (col == 0) {
@@ -76,6 +78,7 @@ export default {
               let data = instance.getDataAtRow(row);
               let parent = document.createElement("div");
               let div = document.createElement("div");
+              let indexOfStatus = instance.getColHeader().indexOf("Status");
               let colorMap = {
                 "In Progress": "yellow",
                 Completed: "green",
@@ -84,7 +87,7 @@ export default {
 
               parent.style = `display:flex;justify-content:center;align-items:center`;
               div.style = `background-color: ${
-                colorMap[data[4]]
+                colorMap[data[indexOfStatus]]
               };width:20px;height:20px;border-radius:50%;`;
 
               parent.appendChild(div);

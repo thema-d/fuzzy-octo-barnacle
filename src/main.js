@@ -6,6 +6,7 @@ import store from "./store";
 import "./assets/styles/index.css";
 
 Vue.config.productionTip = false;
+// Vue.config.devtools = false;
 
 new Vue({
   router,
