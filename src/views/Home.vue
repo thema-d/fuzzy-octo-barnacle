@@ -1,6 +1,7 @@
 <template>
   <hot-table
     licenseKey="non-commercial-and-evaluation"
+    :key="'sprout_the_most_awesome_ljakldjaklfjd'"
     :id="'main_hot_table'"
     :settings="hotSettings"
     :rowHeaders="true"
@@ -112,9 +113,11 @@ export default {
               "task_force",
               this.savedDataFromLocalStorage
             );
-            this.$refs.hotTable.hotInstance.loadData(
-              this.savedDataFromLocalStorage.value
-            );
+            if (this.savedDataFromLocalStorage.value) {
+              this.$refs.hotTable.hotInstance.loadData(
+                this.savedDataFromLocalStorage.value
+              );
+            }
           } else {
             let data = this.$refs.hotTable.hotInstance.getData();
             this.$refs.hotTable.hotInstance.runHooks(
