@@ -1,16 +1,17 @@
 <template>
   <hot-table
     licenseKey="non-commercial-and-evaluation"
+    :id="'main_hot_table'"
     :settings="hotSettings"
     :rowHeaders="true"
     :colHeaders="true"
+    ref="hotTable"
   ></hot-table>
 </template>
 
 <script>
 import { HotTable } from "@handsontable/vue";
 import Handsontable from "handsontable";
-// import Handsontable from "handsontable";
 
 export default {
   name: "Home",
@@ -43,7 +44,8 @@ export default {
           new Date().toLocaleDateString()
         ]
       ],
-      hotSettings: {}
+      hotSettings: {},
+      savedDataFromLocalStorage: {}
     };
   },
   components: {
@@ -57,17 +59,18 @@ export default {
       // hotData.unshift(...this.baseData);
       return {
         data: this.baseData,
-        minCols: 26,
-        minRows: 26,
+        // minCols: 26,
+        // minRows: 26,
         width: "100vw",
         height: "100vh",
         contextMenu: true,
         className: "htLeft",
-        minSpareCols: 3,
-        minSpareRows: 2,
-        // cell: [{ col: 0, className: "htCenter" }],
+        minSpareCols: 1,
+        minSpareRows: 1,
+        allowEmpty: true,
         columns: [
           {
+            readOnly: true,
             className: "htCenter",
             renderer: function(instance, TD, row) {
               let data = instance.getDataAtRow(row);
@@ -100,9 +103,30 @@ export default {
             width: 120
           },
           { type: "date", width: 120 }
+          // uncomment this if you want some more columns to fill the screen
           // ...Array.from({ length: 20 }).map(() => {})
         ],
-        colHeaders: this.colHeaders
+        colHeaders: this.colHeaders,
+        persistentState: true,
+        afterChange: (changes, source) => {
+          if (source == "loadData") {
+            this.$refs.hotTable.hotInstance.runHooks(
+              "persistentStateLoad",
+              "task_force",
+              this.savedDataFromLocalStorage
+            );
+            this.$refs.hotTable.hotInstance.loadData(
+              this.savedDataFromLocalStorage.value
+            );
+          } else {
+            let data = this.$refs.hotTable.hotInstance.getData();
+            this.$refs.hotTable.hotInstance.runHooks(
+              "persistentStateSave",
+              "task_force",
+              data
+            );
+          }
+        }
       };
     }
   },
